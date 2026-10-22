@@ -92,7 +92,7 @@ class TokenFactoryClient:
                 "usage": response.get("usage", {})}
 
     def interpret(self, evidence: dict, language: str) -> dict:
-        from shahid.interpretation import Interpretation, InterpretationError, request_messages, validate_interpretation
+        from shahid.interpretation import Interpretation, InterpretationError, request_messages, validate_interpretation, validate_prose_language
 
         self.settings.validate(require_model=True)
         if language not in ("ar", "en"):
@@ -141,6 +141,11 @@ class TokenFactoryClient:
                 "No configured local rule threshold was crossed. This does not establish site safety or the absence of malicious activity."
             )
             overview_source = "local_rule_scope"
+        try:
+            validate_prose_language(interpretation, evidence, language)
+        except InterpretationError as error:
+            error.metadata = metadata
+            raise
         return {"ai_executed": True, "provider": "Nebius Token Factory", "model": model,
                 "language": language, "interpretation": interpretation, "usage": usage,
                 "latency_ms": metadata["latency_ms"],

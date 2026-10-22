@@ -1,7 +1,7 @@
 # Hackathon submission preparation
 
-Status: source/test-build preparation. A hosted judging demo, public demo video
-and final Devpost submission are still pending. Do not submit placeholder links.
+Status: a hosted judging demo is available. Deploying the language-check update,
+final acceptance checks, the public demo video and Devpost submission remain.
 
 ## Project overview
 
@@ -38,6 +38,8 @@ The server rejects malformed or incomplete output, invented evidence IDs and
 references belonging to unrelated observations. These checks verify structure
 and reference relationships, not the truth of generated prose. Access logs do
 not establish intent, successful authentication, compromise or site safety.
+The updated source rejects obvious language mixing while preserving known
+technical terms and input paths; this narrow check does not guarantee fluency.
 
 ### How I built it
 
@@ -68,8 +70,8 @@ be treated as a confirmed attack.
 
 ### What's next
 
-Expand evaluation beyond synthetic cases, improve language consistency and
-add authenticated deployment with spending controls for a judging demo.
+Expand evaluation beyond synthetic cases and improve language consistency.
+The protected demo has attempt quotas; these are not guaranteed billing caps.
 
 ## Built with
 
@@ -79,9 +81,9 @@ Nebius Token Factory, JSON Schema, GitHub Actions.
 ## Required links and materials
 
 - Public repository: https://github.com/Hashim-Alsharif/shahid (verify uploaded source and license before submission).
-- Working demo/test-build URL: **pending**. Localhost is not a public judging URL.
+- Hosted judging demo: https://shahid.rihlati.me/ (access code in the private field only).
 - Public YouTube video under three minutes: **pending**.
-- English testing instructions: README plus the final hosted-demo access instructions.
+- English testing instructions: `docs/judging-guide.md` plus the private access code.
 - Nebius/NVIDIA feedback: include real observations from evaluation, not assumed benefits.
 
 ## Official requirements checked October 22, 2026
