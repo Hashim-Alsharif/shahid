@@ -1,0 +1,13 @@
+**
+!requirements-lock.txt
+!app/
+!app/**
+!shahid/
+!shahid/**
+!samples/
+!samples/**
+!scripts/
+!scripts/**
+**/__pycache__
+**/*.pyc
+**/.env*

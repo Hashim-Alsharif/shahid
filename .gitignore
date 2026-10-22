@@ -11,3 +11,6 @@ uploads/
 .idea/
 .vscode/
 dist/
+state/
+*.sqlite3
+*.sqlite3-*
