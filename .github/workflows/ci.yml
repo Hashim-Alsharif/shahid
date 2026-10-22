@@ -1,0 +1,40 @@
+name: Verify Shahid
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.12', '3.14']
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: requirements-lock.txt
+      - name: Install pinned dependencies
+        run: python -m pip install -r requirements-lock.txt
+      - name: Local and mocked tests (no Nebius key required)
+        run: python -m pytest -q -p no:cacheprovider
+      - name: Synthetic rule and evidence scenarios (no inference)
+        run: python -m scripts.evaluate
+      - name: Check Python and JavaScript syntax
+        run: |
+          python -m compileall -q app shahid scripts
+          node --check app/static/app.js
+      - name: Build test bundle without credentials
+        run: python -m scripts.build_release
