@@ -4,7 +4,7 @@ import httpx
 import pytest
 
 from shahid.interpretation import (InterpretationError, PreviewTickets, prepare_evidence,
-                                   preview_digest, request_messages, validate_interpretation)
+                                   preview_digest, request_messages, validate_interpretation, validate_prose_language)
 from shahid.logs import analyze_logs
 from shahid.nebius import TokenFactoryClient
 from shahid.settings import ROOT, Settings
@@ -92,6 +92,49 @@ def test_paths_remain_untrusted_data_not_system_instructions(evidence):
     assert json.loads(messages[1]["content"])["language"] == "ar"
     assert json.loads(messages[1]["content"])["data"] == evidence
     assert "الملاحظة" in messages[0]["content"]
+
+
+@pytest.fixture
+def arabic_answer():
+    return {"overview": "تستحق الطلبات المرفوضة مراجعة يدوية.",
+            "assessments": [{"finding_id": "F1", "explanation": "قد تستحق طلبات POST /login مع HTTP 401 في L0001 مراجعة سجلات المصادقة.",
+                "evidence_ids": ["L0001"], "alternative_explanations": ["قد يكون نشاط اختبار أمني مصرح به."],
+                "missing_information": ["سجلات المصادقة غير متاحة."], "verification_steps": ["راجع سجلات التطبيق."]}],
+            "limitations": ["لا تثبت هذه البيانات وقوع اختراق."]}
+
+
+def test_requested_language_keeps_technical_terms_and_input_paths(evidence, arabic_answer, answer):
+    validate_prose_language(arabic_answer, evidence, "ar")
+    validate_prose_language(answer, evidence, "en")
+    evidence["evidence"][0]["path"] = "/попытка"
+    arabic_answer["assessments"][0]["explanation"] = "قد يستحق المسار /попытка مراجعة يدوية."
+    validate_prose_language(arabic_answer, evidence, "ar")
+
+
+@pytest.mark.parametrize("bad", ["قد يكون السبب попытка regardless of validity.", "قد يكون ذلك regardless of validity.", "قد يكون ذلك попытка.", "HTTP 401 L0001"])
+def test_observed_language_mixing_and_missing_arabic_are_rejected(evidence, arabic_answer, bad):
+    arabic_answer["assessments"][0]["alternative_explanations"] = [bad]
+    with pytest.raises(InterpretationError, match="unexpected_ai_language"):
+        validate_prose_language(arabic_answer, evidence, "ar")
+
+
+def test_english_prose_rejects_an_unrelated_script(evidence, answer):
+    answer["limitations"] = ["These logs لا تثبت intent."]
+    with pytest.raises(InterpretationError, match="unexpected_ai_language"):
+        validate_prose_language(answer, evidence, "en")
+
+
+def test_live_client_language_rejection_preserves_usage_and_never_retries(evidence, arabic_answer):
+    arabic_answer["assessments"][0]["alternative_explanations"] = ["قد يكون السبب попытка regardless of validity."]
+    sent = []
+    def handler(request):
+        sent.append(request)
+        return httpx.Response(200, json={"model": MODEL, "choices": [{"message": {"content": json.dumps(arabic_answer)}, "finish_reason": "stop"}], "usage": {"total_tokens": 123}})
+    client = TokenFactoryClient(Settings("fake-key", model=MODEL), transport=httpx.MockTransport(handler))
+    with pytest.raises(InterpretationError, match="unexpected_ai_language") as error:
+        client.interpret(evidence, "ar")
+    assert error.value.metadata["usage"]["total_tokens"] == 123
+    assert len(sent) == 1
 
 
 def test_ticket_is_bound_to_payload_language_model_and_single_use(evidence):

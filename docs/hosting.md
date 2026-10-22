@@ -3,9 +3,13 @@
 ## Status
 
 Hosted-mode safeguards are implemented and covered by offline/mocked tests.
-The public judging site is **not deployed yet**. Linux service/container files
-are prepared; they still need validation on the actual target. No IONOS service,
-DNS record, existing Rihlati data, or live Caddy configuration was changed.
+The owner deployed systemd/Caddy on the IONOS VPS; the judging URL is
+**https://shahid.rihlati.me/**. The owner reported authenticated rule analysis,
+real Arabic Nemotron interpretation, evidence navigation and one attempt deducted.
+Independent external probes verified HTTPS, health and API protection.
+The language-check update still needs deployment. Restart persistence and English
+hosted inference remain pending acceptance; see `judging-guide.md`.
+The optional Docker image remains unbuilt in this local Windows environment.
 
 The owner's existing IONOS VPS is Ubuntu 24.04, 2 vCPU, 4 GB RAM, 120 GB storage.
 Local Rihlati deployment documentation records Caddy/systemd and loopback 8080.
@@ -136,9 +140,10 @@ The Docker build context excludes local `.env`, reports, releases and private da
 The image/runtime have not been built on this Windows environment (Docker absent).
 Do not run `docker compose down -v`, which would delete the quota ledger.
 
-## Private judging instructions template (finish after deployment)
+## Private judging instructions
 
-URL: **pending deployment**. Access code: **provide in private field only**.
+URL: **https://shahid.rihlati.me/**. Access code: **provide in private field only**.
+See `judging-guide.md` for the concise walkthrough and verification record.
 
 1. Open the HTTPS URL, choose English and sign in using the supplied code.
 2. Select Repeated login rejections, then Analyze locally. Review the rule finding

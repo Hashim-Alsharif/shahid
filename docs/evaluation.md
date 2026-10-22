@@ -70,3 +70,18 @@ not evidence of general prompt-injection resistance.
 Current limitations: small synthetic coverage, no real incident labels, no
 precision/recall estimate, no verified factual correctness of generated prose,
 and no general security certification.
+
+## Hosted feedback and language check
+
+The owner's hosted Arabic screenshot contained a Cyrillic word and an English
+phrase in an alternative explanation. The updated client rejects obvious mixed
+scripts and unrecognized English words in Arabic prose, preserving known terms,
+IDs and exact input paths. The UI explains the rejection, keeps usage metadata,
+and does not retry. Failed attempts still count. This does not validate grammar,
+fluency, factual truth, or languages sharing a script.
+
+After the change, one real local synthetic rejected-login request in Arabic
+passed structure, reference and script checks (1,449 prompt + 378 output = 1,827
+tokens). Manual review found localized, tentative alternatives, but awkward
+word repetition remained. One sample is not a quality benchmark. This local CLI
+call is outside the hosted counter; deployed behavior still needs acceptance.

@@ -27,8 +27,9 @@
 1. Confirm receipt of hackathon credits; the application has been submitted.
 2. Expand manual quality evaluation beyond the seven synthetic scenarios and
    selected recorded live examples in docs/evaluation.md.
-3. Verify the prepared authenticated demo on the actual VPS and deploy HTTPS.
-4. Package a working demo/test build, public source, README and short demo video.
+3. Deploy the language-check update and verify counter persistence plus English
+   hosted interpretation. The owner has verified Arabic hosted interpretation.
+4. Record a short English/translated demo video and complete Devpost submission.
 
 ## Submission preparation delivered
 
@@ -45,8 +46,8 @@
 
 Hosted preparation now includes a shared judging-code gate, durable global
 attempt quotas, per-session allowance, and operator pause. These are not
-per-person identity or guaranteed dollar billing limits. Deployment and one
-real hosted inference remain pending; see `hosting.md`.
+per-person identity or guaranteed dollar billing limits. HTTPS is deployed and
+the owner reported real hosted inference; see `hosting.md` and `judging-guide.md`.
 
 One log format, one web page, synthetic examples, and report review. No automatic
 firewall changes, shell commands, log-agent deployment, persistent customer data,
@@ -54,4 +55,4 @@ or claim of confirmed compromise from access logs alone.
 
 Track: Best Apps and Agents. The NVIDIA model must be called through Nebius at
 runtime (or run on Nebius AI Cloud); local rules and a prepared configuration
-alone do not meet that requirement. The web application is not deployed yet.
+alone do not meet that requirement. The protected demo is at https://shahid.rihlati.me/.

@@ -4,8 +4,10 @@ Evidence-based web access log triage for the Nebius × NVIDIA Global AI Hackatho
 
 ## Current status
 
-This is a prototype with local and authenticated hosted modes. The hosted
-safeguards are implemented; the public judging URL is not deployed yet.
+This is a prototype with local and authenticated hosted modes. The judging demo
+is at **https://shahid.rihlati.me/** with a private judging access code. See the
+[walkthrough and verification record](docs/judging-guide.md). The latest
+language-check change still needs deployment to the live service.
 The bilingual Arabic/English FastAPI UI
 parses a limited Nginx combined-log format, produces rule-based observations,
 and links them to real input line IDs. Four samples are available in the UI,
@@ -27,7 +29,7 @@ The bilingual web integration was subsequently verified with Nemotron Super:
 Arabic rejected-login interpretation (1,821 tokens, approximately 4.0 seconds)
 and English sensitive-path interpretation (1,453 tokens, approximately 3.9 seconds).
 Evidence links focused and highlighted the corresponding parsed lines. There
-are 79 passing local/mocked tests. Local verification records and screenshots
+are 86 passing local/mocked tests. Local verification records and screenshots
 are in ignored `reports/`; broader semantic quality evaluation is still pending.
 
 ## Run on Windows PowerShell
@@ -51,7 +53,7 @@ Stop the server with Ctrl+C. Environment activation is optional.
 sessions, persistent SQLite attempt counters, global daily/lifetime quotas,
 session allowance, no automatic retries, and a server-shell pause switch.
 Hosted inference starts disabled until explicitly enabled. Attempt quotas are
-not guaranteed dollar billing limits. No judge API key is required once deployed.
+not guaranteed dollar billing limits. No judge API key is required on the hosted demo.
 
 For the existing Ubuntu/Caddy VPS, `deploy/shahid.service` binds loopback 8011
 with its own account and state directory. `deploy/Caddyfile.shahid` is an additive
@@ -61,10 +63,10 @@ Docker is an optional route for a host that already supports it.
 
 ## Try the bilingual AI workflow
 
-1. Configure `.env` as described below; this machine already has a working key
-   and `NEBIUS_MODEL=nvidia/nemotron-3-super-120b-a12b`. Super was selected after
-   reviewing Arabic generation quality; the earlier connection smoke used
-   Lightning. Never put a key in the browser.
+1. On the hosted demo, sign in using the private judging code. For a local copy,
+   configure your own `.env` as described below. The demonstrated model is
+   `nvidia/nemotron-3-super-120b-a12b`; verify availability for your account.
+   Never put a Nebius key in the browser.
 2. Choose العربية or English at the top. Arabic uses RTL; English uses LTR.
 3. Select **Repeated login rejections** and click **Analyze locally**. Expect
    eight requests and one local observation, without a model call.
@@ -97,6 +99,9 @@ When there are no local findings, the overview is replaced with an explicitly
 labelled local rule-scope statement, rather than a model-written safety claim.
 Model output may still contain language or reasoning errors; reference validation
 does not detect all such errors. Manual bilingual quality evaluation remains ongoing.
+The updated source rejects obvious foreign-script/word mixing, with exceptions
+for known technical identifiers and exact input paths. It never silently translates
+or retries the response. This is not a grammar, fluency or complete language detector.
 See [Arabic walkthrough](docs/try-shahid-ar.md) for click-by-click instructions.
 
 ## Evaluate and build a test copy
