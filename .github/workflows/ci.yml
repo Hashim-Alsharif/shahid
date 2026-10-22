@@ -36,5 +36,6 @@ jobs:
         run: |
           python -m compileall -q app shahid scripts
           node --check app/static/app.js
+          node --check app/static/login.js
       - name: Build test bundle without credentials
         run: python -m scripts.build_release

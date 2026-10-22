@@ -1,0 +1,9 @@
+# Add this NEW site block to the existing Caddyfile only after reviewing it.
+# Do not replace the rihlati.me block. DNS must point to this VPS first.
+shahid.rihlati.me {
+    reverse_proxy 127.0.0.1:8011 {
+        transport http {
+            response_header_timeout 110s
+        }
+    }
+}

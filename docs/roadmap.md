@@ -27,7 +27,7 @@
 1. Confirm receipt of hackathon credits; the application has been submitted.
 2. Expand manual quality evaluation beyond the seven synthetic scenarios and
    selected recorded live examples in docs/evaluation.md.
-3. Add authentication and per-user spending limits before public deployment.
+3. Verify the prepared authenticated demo on the actual VPS and deploy HTTPS.
 4. Package a working demo/test build, public source, README and short demo video.
 
 ## Submission preparation delivered
@@ -42,6 +42,11 @@
   before describing CI as passed. Test bundle instructions and English submission draft.
 
 ## Keep the first version small
+
+Hosted preparation now includes a shared judging-code gate, durable global
+attempt quotas, per-session allowance, and operator pause. These are not
+per-person identity or guaranteed dollar billing limits. Deployment and one
+real hosted inference remain pending; see `hosting.md`.
 
 One log format, one web page, synthetic examples, and report review. No automatic
 firewall changes, shell commands, log-agent deployment, persistent customer data,

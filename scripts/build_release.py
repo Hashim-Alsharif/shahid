@@ -9,9 +9,11 @@ from dotenv import dotenv_values
 
 from shahid.settings import ROOT
 
-ROOT_FILES = {"README.md", "LICENSE", "requirements.txt", "requirements-lock.txt", ".env.example", ".gitignore", ".gitattributes"}
+ROOT_FILES = {"README.md", "LICENSE", "requirements.txt", "requirements-lock.txt", ".env.example", ".gitignore", ".gitattributes",
+              "Dockerfile", ".dockerignore", "compose.yaml", "pytest.ini", "deploy/nginx-site.conf.example",
+              "deploy/Caddyfile.shahid", "deploy/shahid.service", "deploy/demo.env.example"}
 SOURCE_DIRS = ("app", "shahid", "scripts", "samples", "tests", "docs", ".github")
-EXTENSIONS = {".py", ".js", ".css", ".html", ".md", ".json", ".log", ".yml", ".yaml", ".png", ".svg"}
+EXTENSIONS = {".py", ".sh", ".js", ".css", ".html", ".md", ".json", ".log", ".yml", ".yaml", ".png", ".svg"}
 
 
 def source_files(root: Path) -> list[Path]:

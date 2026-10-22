@@ -1,0 +1,23 @@
+name: shahid
+services:
+  web:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8011:8000"
+    env_file: .env.hosted
+    environment:
+      SHAHID_MODE: hosted
+      SHAHID_DB_PATH: /app/state/demo.sqlite3
+    volumes:
+      - shahid-state:/app/state
+    read_only: true
+    tmpfs:
+      - /tmp:size=32m,noexec,nosuid
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 512m
+    cpus: 0.50
+    pids_limit: 128
+volumes:
+  shahid-state:

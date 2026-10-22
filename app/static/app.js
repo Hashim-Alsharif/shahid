@@ -3,6 +3,10 @@ const $ = id => document.getElementById(id);
 const node = (tag, text, cls) => { const el = document.createElement(tag); el.textContent = text; if(cls) el.className = cls; return el; };
 const strings = {
   ar: {
+    logout:"تسجيل الخروج", demoPrivacy:"تُرسل السجلات إلى خادم شاهد للتحليل بالقواعد. لا يحفظ التطبيق محتواها، لكنه يحتفظ بعدّادات الاستخدام وجلسات الدخول. استخدم العينات المصطنعة أولًا.",
+    demoUsage:"المحاولات المتبقية: للجلسة {session} · للموقع اليوم {daily} · للموقع إجمالًا {total}. التجديد اليومي بتوقيت UTC. المحاولات الفاشلة تُحتسب أيضًا.",
+    ai_disabled:"التفسير متوقف مؤقتًا لدى صاحب المشروع. التحليل بالقواعد ما زال متاحًا.", quota_exhausted:"وصلت التجربة إلى حد المحاولات. التحليل بالقواعد ما زال متاحًا؛ راجع صاحب المشروع إذا احتجت محاولات إضافية.",
+    ai_cooldown:"انتظر 20 ثانية بين محاولات التفسير، ثم جهّز معاينة جديدة.", auth_required:"انتهت جلسة الدخول. ادخل مجددًا برمز التجربة.", demo_unavailable:"تعذر الوصول إلى عدّاد الاستخدام. تم إيقاف التفسير احترازيًا؛ حاول لاحقًا.",
     brand:"شاهد", badge:"دليل محلي · تفسير Nemotron اختياري", lead:"من سجلّ الموقع إلى ملاحظة يمكنك التحقق من دليلها.",
     intro:"استخرج الملاحظات محليًا، ثم اطلب شرحًا بالعربية أو الإنجليزية من NVIDIA Nemotron عبر Nebius Token Factory.",
     workflow:"١. حلّل محليًا  ←  ٢. راجع البيانات  ←  ٣. اطلب التفسير  ←  ٤. تحقق من الدليل",
@@ -39,6 +43,10 @@ const strings = {
     rules:{repeated_login_rejection:["طلبات دخول مرفوضة متكررة خلال دقيقة","قد تستحق مراجعة سجل المصادقة. استجابات 401 و403 وحدها لا تثبت تخمين كلمات المرور أو نجاح اختراق."], sensitive_paths:["طلبات لمسارات حساسة","تحقق من غرض الطلبات وإعداد الخادم؛ طلب المسار لا يثبت أن الملف موجود أو أن بيانات تسربت."], request_burst:["كثافة طلبات خلال دقيقة","ملاحظة عن المعدل فقط؛ قد تمثل استخدامًا مشروعًا أو مصدرًا مشتركًا، ولا تكفي لإثبات هجوم."]}
   },
   en: {
+    logout:"Sign out", demoPrivacy:"Logs are sent to the Shahid server for rule-based analysis. The application does not save their contents, but retains usage counters and sign-in sessions. Start with synthetic samples.",
+    demoUsage:"Attempts remaining: session {session} · site today {daily} · site total {total}. Daily reset is UTC. Failed provider attempts count too.",
+    ai_disabled:"Interpretation is temporarily paused by the owner. Rule-based analysis remains available.", quota_exhausted:"The demo attempt quota has been reached. Rule-based analysis remains available; contact the owner if more attempts are needed.",
+    ai_cooldown:"Wait 20 seconds between interpretation attempts, then prepare a new preview.", auth_required:"Your sign-in session has expired. Sign in again with the demo access code.", demo_unavailable:"Usage accounting is temporarily unavailable. Interpretation has been blocked as a precaution; try later.",
     brand:"Shahid", badge:"Local evidence · Optional Nemotron interpretation", lead:"From access logs to observations you can verify.",
     intro:"Find observations locally, then request an Arabic or English explanation from NVIDIA Nemotron through Nebius Token Factory.",
     workflow:"1. Analyze locally  →  2. Review data  →  3. Request interpretation  →  4. Check evidence",
@@ -77,7 +85,7 @@ const strings = {
 };
 let lang = "ar";
 try { if(localStorage.getItem("shahid-language") === "en") lang = "en"; } catch {}
-let report = null, preview = null, ai = null, busy = false, fileName = "";
+let report = null, preview = null, ai = null, busy = false, fileName = "", demo = null;
 const t = key => strings[lang][key] || strings[lang].provider_error;
 const say = (id, key) => { $(id).textContent = t(key); };
 const validText = () => $("logtext").value.trim() && new TextEncoder().encode($("logtext").value).length <= 100000;
@@ -95,11 +103,27 @@ async function api(url, payload) {
   let data;
   try { data = await response.json(); } catch { throw new Error("network_error"); }
   if(!response.ok) {
+    if(response.status === 401 && data.detail?.code === "auth_required") location.replace("/login");
     const error = new Error(data.detail?.code || (response.status === 422 || response.status === 413 ? "invalid_input" : "provider_error"));
     error.usage = data.detail?.usage; throw error;
   }
   return data;
 }
+function renderDemo() {
+  if(demo?.mode !== "hosted") return;
+  $("demo-panel").hidden = false;
+  $("demo-usage").textContent = t("demoUsage").replace("{session}", demo.session_remaining).replace("{daily}", demo.daily_remaining).replace("{total}", demo.total_remaining)
+    + (demo.enabled ? "" : ` ${t("ai_disabled")}`);
+  document.querySelector('[data-i18n="localPrivacy"]').textContent = t("demoPrivacy");
+  document.querySelector('[data-i18n="footer"]').textContent = lang === "ar" ? "شاهد · تجربة الحكّام · NVIDIA Nemotron × Nebius Token Factory" : "Shahid · Judging demo · NVIDIA Nemotron × Nebius Token Factory";
+}
+async function refreshDemo() {
+  try { demo = await api("/api/demo"); renderDemo(); } catch(error) { say("ai-message", error.message); }
+}
+$("logout").addEventListener("click", async () => {
+  try { await api("/api/auth/logout", {}); location.replace("/login"); }
+  catch(error) { say("ai-message", error.message); }
+});
 function evidenceButtons(ids, parent) {
   const buttons = node("div", "", "evidence-links");
   ids.forEach(id => {
@@ -148,7 +172,7 @@ function applyLanguage() {
   document.title = lang === "ar" ? "شاهد | تفسير سجلات الويب" : "Shahid | Evidence-based log triage";
   document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = t(el.dataset.i18n); });
   $("lang-ar").setAttribute("aria-pressed", String(lang === "ar")); $("lang-en").setAttribute("aria-pressed", String(lang === "en"));
-  $("filename").textContent = fileName || t("noFile"); renderReport();
+  $("filename").textContent = fileName || t("noFile"); renderReport(); renderDemo();
 }
 ["ar", "en"].forEach(value => $("lang-" + value).addEventListener("click", () => {
   if(busy || value === lang) return;
@@ -194,6 +218,7 @@ $("interpret").addEventListener("click", async () => {
     say("ai-message", error.message);
     if(Number.isInteger(error.usage?.total_tokens)) $("ai-message").textContent += ` ${t("tokens")}: ${error.usage.total_tokens}`;
   }
-  finally { $("consent").checked = false; setBusy(false); }
+  finally { $("consent").checked = false; setBusy(false); await refreshDemo(); }
 });
 applyLanguage();
+refreshDemo();

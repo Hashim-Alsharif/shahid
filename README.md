@@ -4,7 +4,9 @@ Evidence-based web access log triage for the Nebius × NVIDIA Global AI Hackatho
 
 ## Current status
 
-This is a local prototype. The bilingual Arabic/English FastAPI UI
+This is a prototype with local and authenticated hosted modes. The hosted
+safeguards are implemented; the public judging URL is not deployed yet.
+The bilingual Arabic/English FastAPI UI
 parses a limited Nginx combined-log format, produces rule-based observations,
 and links them to real input line IDs. Four samples are available in the UI,
 with seven synthetic scenarios in the offline evaluation suite.
@@ -25,7 +27,7 @@ The bilingual web integration was subsequently verified with Nemotron Super:
 Arabic rejected-login interpretation (1,821 tokens, approximately 4.0 seconds)
 and English sensitive-path interpretation (1,453 tokens, approximately 3.9 seconds).
 Evidence links focused and highlighted the corresponding parsed lines. There
-are 70 passing local/mocked tests. Local verification records and screenshots
+are 79 passing local/mocked tests. Local verification records and screenshots
 are in ignored `reports/`; broader semantic quality evaluation is still pending.
 
 ## Run on Windows PowerShell
@@ -42,6 +44,20 @@ python -m venv .venv
 Open http://127.0.0.1:8010/ and select a synthetic sample, then the local analysis
 button. Each finding has evidence links. API documentation is at `/docs`.
 Stop the server with Ctrl+C. Environment activation is optional.
+
+## Protected judging deployment
+
+[Hosting guide](docs/hosting.md) covers the separate HTTPS judging code, eight-hour
+sessions, persistent SQLite attempt counters, global daily/lifetime quotas,
+session allowance, no automatic retries, and a server-shell pause switch.
+Hosted inference starts disabled until explicitly enabled. Attempt quotas are
+not guaranteed dollar billing limits. No judge API key is required once deployed.
+
+For the existing Ubuntu/Caddy VPS, `deploy/shahid.service` binds loopback 8011
+with its own account and state directory. `deploy/Caddyfile.shahid` is an additive
+site block; do not replace another application's live proxy configuration.
+First verify the existing host using the read-only `scripts/vps_preflight.sh`.
+Docker is an optional route for a host that already supports it.
 
 ## Try the bilingual AI workflow
 
