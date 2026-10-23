@@ -84,4 +84,12 @@ After the change, one real local synthetic rejected-login request in Arabic
 passed structure, reference and script checks (1,449 prompt + 378 output = 1,827
 tokens). Manual review found localized, tentative alternatives, but awkward
 word repetition remained. One sample is not a quality benchmark. This local CLI
-call is outside the hosted counter; deployed behavior still needs acceptance.
+call is outside the hosted counter.
+
+The owner subsequently reported successful deployment of PR #2, unchanged counters
+across restart, then one successful English hosted request with evidence links
+and a single attempt deduction. The supplied screenshots display the English
+response, evidence event L0003 highlighted, the Super model ID, 1,746 tokens and
+4.7 seconds. These are one response's reported metadata, not benchmark results.
+The protected request was run by the owner; the agent did not independently
+repeat it or access the owner's private judging credentials.

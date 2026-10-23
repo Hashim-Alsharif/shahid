@@ -24,12 +24,25 @@
 
 ## Remaining
 
-1. Confirm receipt of hackathon credits; the application has been submitted.
+1. Confirm credit amount/expiry and allowances cover the judging period; the
+   owner confirmed receiving and activating hackathon credits on October 23.
 2. Expand manual quality evaluation beyond the seven synthetic scenarios and
    selected recorded live examples in docs/evaluation.md.
-3. Deploy the language-check update and verify counter persistence plus English
-   hosted interpretation. The owner has verified Arabic hosted interpretation.
-4. Record a short English/translated demo video and complete Devpost submission.
+3. Confirm enough funded inference and allowance for judging through December 15;
+   current finite quotas alone do not establish unrestricted testing access.
+4. Complete the Devpost draft, review the final fields and submit. The owner
+   confirmed https://youtu.be/VCfGjb65STs is Public and plays in a private window
+   with a duration of 2:52.
+
+## Hosted acceptance and video preparation
+
+- Owner confirmed the PR #2 deployment marker and counters preserved across restart.
+- Owner confirmed English hosted interpretation, working evidence navigation and
+  exactly one additional attempt; screenshots display the real provider/model result.
+- English narration, an optional Arabic translation, recording storyboard and
+  private judging-field template are prepared. The owner recorded two takes;
+  an edited 172.137-second review copy was exported, and the owner approved the
+  sound/splice and confirmed its public YouTube upload on October 23.
 
 ## Submission preparation delivered
 
