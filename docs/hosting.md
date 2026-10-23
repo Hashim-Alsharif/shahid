@@ -7,8 +7,10 @@ The owner deployed systemd/Caddy on the IONOS VPS; the judging URL is
 **https://shahid.rihlati.me/**. The owner reported authenticated rule analysis,
 real Arabic Nemotron interpretation, evidence navigation and one attempt deducted.
 Independent external probes verified HTTPS, health and API protection.
-The language-check update still needs deployment. Restart persistence and English
-hosted inference remain pending acceptance; see `judging-guide.md`.
+The owner confirmed deployment of the language-check update, counters preserved
+across restart, and a successful English hosted request with evidence navigation
+and one attempt deducted; see `judging-guide.md`. On October 23, independent probes
+again verified health 200, a sign-in redirect and API 401 without a session.
 The optional Docker image remains unbuilt in this local Windows environment.
 
 The owner's existing IONOS VPS is Ubuntu 24.04, 2 vCPU, 4 GB RAM, 120 GB storage.
@@ -142,7 +144,9 @@ Do not run `docker compose down -v`, which would delete the quota ledger.
 
 ## Private judging instructions
 
-URL: **https://shahid.rihlati.me/**. Access code: **provide in private field only**.
+URL: **https://shahid.rihlati.me/**. The owner uploaded the access code and English
+walkthrough in the private **Additional info > Upload a File** attachment on
+Devpost. Keep the code out of public source, story and video description.
 See `judging-guide.md` for the concise walkthrough and verification record.
 
 1. Open the HTTPS URL, choose English and sign in using the supplied code.

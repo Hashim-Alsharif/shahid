@@ -6,8 +6,15 @@ Evidence-based web access log triage for the Nebius × NVIDIA Global AI Hackatho
 
 This is a prototype with local and authenticated hosted modes. The judging demo
 is at **https://shahid.rihlati.me/** with a private judging access code. See the
-[walkthrough and verification record](docs/judging-guide.md). The latest
-language-check change still needs deployment to the live service.
+[walkthrough and verification record](docs/judging-guide.md). The owner confirmed
+deployment of the language-check update, counters preserved across restart,
+and working hosted Arabic/English inference and evidence navigation.
+
+**Demo video:** [Shahid walkthrough on YouTube](https://youtu.be/VCfGjb65STs)
+(2:52). Public playback and video metadata were independently checked on
+October 23, 2026. Judges receive the login code and English testing instructions
+in the private attachment to the Devpost submission; the code is not public.
+
 The bilingual Arabic/English FastAPI UI
 parses a limited Nginx combined-log format, produces rule-based observations,
 and links them to real input line IDs. Four samples are available in the UI,
@@ -171,9 +178,10 @@ Do not substitute an unrelated provider for the hackathon requirement.
   application. Previewed minimized evidence is sent to Nebius only on explicit
   submission; provider handling follows Nebius terms. Paths can retain secrets.
   The app has no shell execution or automatic blocking/remediation.
-- Run on `127.0.0.1` only. This prototype has localhost host/origin checks and
-  single-use previews but no public user authentication or per-user spending
-  quotas. Public deployment needs those controls before exposing paid inference.
+- The default local setup binds `127.0.0.1`. For a public judging deployment,
+  use the [hosted configuration](docs/hosting.md): HTTPS, exact host/origin checks,
+  a private demo-code gate and persistent global/session attempt limits. These
+  shared-code demo controls are not individual user accounts or billing caps.
 - `.env`, `.venv`, uploads, and reports are excluded from Git. Do not paste a key
   into the frontend or commit it. The client uses official HTTPS Nebius hosts,
   preserves certificate validation, and does not follow credential redirects.
@@ -199,18 +207,20 @@ Do not substitute an unrelated provider for the hackathon requirement.
 ## Next milestones
 
 - [x] Verify live Nemotron inference through Token Factory.
-- [ ] Confirm receipt of hackathon credits (application submitted).
+- [x] Owner confirmed hackathon credits received and activated on October 23.
 - [x] Connect evidence-only Nemotron interpretation to the web UI with an
   explicit send action and a preview of exactly what leaves the app.
 - [x] Validate generated evidence references and distinguish observed facts
   from interpretations and missing information.
 - [x] Add seven reproducible synthetic rule/evidence cases and selected live examples.
 - [ ] Expand semantic quality evaluation beyond those synthetic examples.
-- [ ] Provide a working demo/test-build URL, public repository and short video.
+- [x] Provide a working hosted demo URL, public repository and short video.
+- [ ] Verify credit expiry and sufficient inference allowance throughout judging.
+- [ ] Complete and verify the final Devpost submission.
 
 Original code is MIT-licensed; dependencies and model usage retain their own
-licenses and service terms. No deployment or hackathon submission is created
-by this local scaffold.
+licenses and service terms. Running the local setup does not automatically deploy
+the app or submit a hackathon entry.
 
 ## Integration references
 
